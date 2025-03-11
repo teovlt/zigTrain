@@ -2,8 +2,12 @@
 //! you are building an executable. If you are making a library, the convention
 //! is to delete this file and start with root.zig instead.
 
-pub fn main() !void {
+pub fn soutHelloworld() !void {
     std.debug.print("Hello, world!\n", .{});
+}
+
+pub fn main() !void {
+    try soutHelloworld();
 }
 
 const std = @import("std");
