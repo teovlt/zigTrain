@@ -1,16 +1,30 @@
-//! By convention, main.zig is where your main function lives in the case that
-//! you are building an executable. If you are making a library, the convention
-//! is to delete this file and start with root.zig instead.
+const std = @import("std");
+const stdin = std.io.getStdIn().reader();
+const stdout = std.io.getStdOut().writer();
 
-pub fn soutHelloworld() !void {
+fn soutHelloworld() !void {
     std.debug.print("Hello, world!\n", .{});
 }
 
-pub fn main() !void {
-    try soutHelloworld();
+fn askUserInput() !void {
+    var buffer: [1024]u8 = undefined;
+    const bytesRead = try stdin.readUntilDelimiterOrEof(&buffer, '\n');
+
+    // Vérification que l'entrée n'est pas vide
+    if (bytesRead == null) {
+        std.debug.print("No input received.\n", .{});
+        return;
+    }
+
+    // Extraire la valeur de bytesRead
+    _ = bytesRead.?; // Utilisation de .? pour extraire la valeur optionnelle
+
+    // Utiliser la longueur obtenue pour découper le tableau correctement
+    const input = buffer[0..]; // Découpe en fonction de la taille lue
+    try stdout.print("You entered: {s}\n", .{input});
 }
 
-const std = @import("std");
-
-/// This imports the separate module containing `root.zig`. Take a look in `build.zig` for details.
-const lib = @import("zigTrain_lib");
+pub fn main() !void {
+    try askUserInput();
+    try soutHelloworld();
+}
